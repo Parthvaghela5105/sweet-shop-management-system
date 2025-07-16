@@ -138,12 +138,59 @@ public class SweetControllerTest {
 
         // Perform the search by name = Gulab
         mockMvc.perform(get("/sweets/search")
-                        .param("name", "Gulab Jamun"))
+                    .param("name", "Gulab Jamun"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].name").value("Gulab Jamun"));
     }
 
+    @Test
+    void testSearchSweetsByCategory_returnsMatchingSweets() throws Exception {
+        // Add test sweets
+        SweetDTO sweet1 = SweetDTO.builder()
+                .name("Gulab Jamun")
+                .category("Milk-Based")
+                .price(30.0)
+                .quantity(15)
+                .build();
+
+        SweetDTO sweet2 = SweetDTO.builder()
+                .name("Rasgulla")
+                .category("Milk-Based")
+                .price(25.0)
+                .quantity(10)
+                .build();
+
+        SweetDTO sweet3 = SweetDTO.builder()
+                .name("Kaju Katli")
+                .category("Nut-Based")
+                .price(50.0)
+                .quantity(20)
+                .build();
+
+        mockMvc.perform(post("/sweets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sweet1)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/sweets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sweet2)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/sweets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sweet3)))
+                .andExpect(status().isCreated());
+
+        // Perform the category-based search
+        mockMvc.perform(get("/sweets/search-by-category")
+                        .param("category", "Milk-Based"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].category").value("Milk-Based"))
+                .andExpect(jsonPath("$[1].category").value("Milk-Based"));
+    }
 
 
 }
