@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -68,5 +69,43 @@ public class SweetControllerTest {
         mockMvc.perform(delete("/sweets/{id}", sweetId))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    void testGetAllSweets_returnsListOfSweets() throws Exception {
+
+        // Add first sweet
+        SweetDTO sweet1 = SweetDTO.builder()
+                .name("Kaju Katli")
+                .category("Nut-Based")
+                .price(50.0)
+                .quantity(20)
+                .build();
+
+        mockMvc.perform(post("/sweets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sweet1)))
+                .andExpect(status().isCreated());
+
+        // Add second sweet
+        SweetDTO sweet2 = SweetDTO.builder()
+                .name("Gulab Jamun")
+                .category("Milk-Based")
+                .price(30.0)
+                .quantity(15)
+                .build();
+
+        mockMvc.perform(post("/sweets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sweet2)))
+                .andExpect(status().isCreated());
+
+        // Perform GET request to fetch all sweets
+        mockMvc.perform(get("/sweets"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(2))
+                .andExpect(jsonPath("$[0].name").value("Kaju Katli"))
+                .andExpect(jsonPath("$[1].name").value("Gulab Jamun"));
+    }
+
 
 }
