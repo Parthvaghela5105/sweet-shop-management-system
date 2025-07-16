@@ -9,14 +9,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class InventoryControllerTest {
+public class SweetInventoryControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -53,5 +53,38 @@ public class InventoryControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Purchase successful! 10 units of Rasgulla purchased."));
     }
+
+    @Test
+    void testRestockSweet_successfullyIncreasesQuantity() throws Exception {
+        // First, add a sweet to restock
+        SweetDTO sweetDTO = SweetDTO.builder()
+                .name("Rasgulla")
+                .category("Milk-Based")
+                .price(25.0)
+                .quantity(10)
+                .build();
+
+        MvcResult result = mockMvc.perform(post("/sweets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sweetDTO)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        SweetDTO savedSweet = objectMapper.readValue(response, SweetDTO.class);
+        Long sweetId = savedSweet.getId();
+
+        // Now restock
+        mockMvc.perform(post("/sweets/" + sweetId + "/restock")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                        {
+                            "quantity": 5
+                        }
+                    """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.quantity").value(15)); // 10 original + 5 restocked
+    }
+
 
 }
