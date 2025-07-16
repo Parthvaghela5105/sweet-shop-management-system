@@ -1,6 +1,7 @@
 package com.sweetshop.controller;
 
 import com.sweetshop.dto.PurchaseRequestDTO;
+import com.sweetshop.dto.RestockRequestDTO;
 import com.sweetshop.dto.SweetDTO;
 import com.sweetshop.services.SweetService;
 import jakarta.validation.Valid;
@@ -61,6 +62,13 @@ public class SweetController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
+
+    @PostMapping("/{id}/restock")
+    public ResponseEntity<SweetDTO> restockSweet(@PathVariable Long id,
+                                                 @RequestBody RestockRequestDTO requestDTO) {
+        SweetDTO updated = sweetService.restockSweet(id, requestDTO.getQuantity());
+        return ResponseEntity.ok(updated);
     }
 
 }

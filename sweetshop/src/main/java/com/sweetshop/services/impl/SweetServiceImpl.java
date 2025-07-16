@@ -81,4 +81,14 @@ public class SweetServiceImpl implements SweetService {
 
         return "Purchase successful! " + quantity + " units of " + sweet.getName() + " purchased.";
     }
+
+    @Override
+    public SweetDTO restockSweet(Long sweetId, int quantity) {
+        Sweet sweet = sweetRepository.findById(sweetId)
+                .orElseThrow(() -> new RuntimeException("Sweet not found"));
+
+        sweet.setQuantity(sweet.getQuantity() + quantity);
+        Sweet updated = sweetRepository.save(sweet);
+        return SweetMapper.toDTO(updated);
+    }
 }
