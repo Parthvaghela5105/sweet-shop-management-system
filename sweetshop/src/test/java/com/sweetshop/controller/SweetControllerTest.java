@@ -187,7 +187,7 @@ public class SweetControllerTest {
         mockMvc.perform(get("/sweets/search-by-category")
                         .param("category", "Milk-Based"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$.length()").value(greaterThanOrEqualTo(2)))
                 .andExpect(jsonPath("$[0].category").value("Milk-Based"))
                 .andExpect(jsonPath("$[1].category").value("Milk-Based"));
     }

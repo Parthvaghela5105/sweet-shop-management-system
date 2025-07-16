@@ -41,4 +41,9 @@ public class SweetController {
         return new ResponseEntity<>(sweetService.getSweetByName(name), HttpStatus.OK);
     }
 
+    @GetMapping("/search-by-category")
+    public ResponseEntity<List<SweetDTO>> getSweetByCategory(@RequestParam String category){
+        return new ResponseEntity<>(sweetService.getSweetByCategory(category) , HttpStatus.OK);
+    }
+
 }

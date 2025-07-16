@@ -46,4 +46,14 @@ public class SweetServiceImpl implements SweetService {
         }
         return null;
     }
+
+    @Override
+    public List<SweetDTO> getSweetByCategory(String category) {
+        if(sweetRepository.findByCategory(category) != null)
+        {
+            List<Sweet> sweetList = sweetRepository.findByCategory(category);
+            return sweetList.stream().map(SweetMapper::toDTO).toList();
+        }
+        return null;
+    }
 }

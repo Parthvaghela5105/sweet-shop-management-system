@@ -10,4 +10,5 @@ public interface SweetService {
     void deleteSweet(Long id);
     List<SweetDTO> getAllSweets();
     List<SweetDTO> getSweetByName(String name);
+    List<SweetDTO> getSweetByCategory(String category);
 }
