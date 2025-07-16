@@ -8,6 +8,8 @@ import com.sweetshop.services.SweetService;
 import com.sweetshop.util.SweetMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SweetServiceImpl implements SweetService {
     private SweetRepository sweetRepository;
@@ -20,6 +22,12 @@ public class SweetServiceImpl implements SweetService {
         Sweet sweet = SweetMapper.toEntity(sweetDTO);
         sweetRepository.save(sweet);
         return SweetMapper.toDTO(sweet);
+    }
+
+    @Override
+    public List<SweetDTO> getAllSweets() {
+        List<Sweet> sweetList = sweetRepository.findAll();
+        return sweetList.stream().map(SweetMapper::toDTO).toList();
     }
 
     @Override

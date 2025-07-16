@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/sweets")
 public class SweetController {
@@ -27,6 +29,11 @@ public class SweetController {
     public ResponseEntity<Void> deleteSweet(@PathVariable Long id){
         sweetService.deleteSweet(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<SweetDTO>> getAllSweets(){
+        return new ResponseEntity<>(sweetService.getAllSweets(), HttpStatus.OK);
     }
 
 }
