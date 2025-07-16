@@ -56,4 +56,14 @@ public class SweetServiceImpl implements SweetService {
         }
         return null;
     }
+
+    @Override
+    public List<SweetDTO> getSweetByPriceRange(double minPrice, double maxPrice) {
+        if(sweetRepository.findByPriceBetween(minPrice , maxPrice) != null)
+        {
+            List<Sweet> sweetList = sweetRepository.findByPriceBetween(minPrice , maxPrice);
+            return sweetList.stream().map(SweetMapper::toDTO).toList();
+        }
+        return null;
+    }
 }

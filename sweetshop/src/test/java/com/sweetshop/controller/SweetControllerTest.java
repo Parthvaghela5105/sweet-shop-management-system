@@ -214,8 +214,8 @@ public class SweetControllerTest {
                 .andExpect(status().isCreated());
 
         mockMvc.perform(get("/sweets/search/range")
-                        .param("min", "25")
-                        .param("max", "50"))
+                        .param("minPrice", "25")
+                        .param("maxPrice", "50"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].name").exists())

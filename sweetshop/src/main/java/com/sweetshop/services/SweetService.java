@@ -11,4 +11,5 @@ public interface SweetService {
     List<SweetDTO> getAllSweets();
     List<SweetDTO> getSweetByName(String name);
     List<SweetDTO> getSweetByCategory(String category);
+    List<SweetDTO> getSweetByPriceRange(double minPrice , double maxPrice);
 }

@@ -46,4 +46,10 @@ public class SweetController {
         return new ResponseEntity<>(sweetService.getSweetByCategory(category) , HttpStatus.OK);
     }
 
+    @GetMapping("/search/range")
+    public ResponseEntity<List<SweetDTO>> getSweetByPriceRange(@RequestParam double minPrice , @RequestParam double maxPrice)
+    {
+        return new ResponseEntity<>(sweetService.getSweetByPriceRange(minPrice , maxPrice) , HttpStatus.OK);
+    }
+
 }

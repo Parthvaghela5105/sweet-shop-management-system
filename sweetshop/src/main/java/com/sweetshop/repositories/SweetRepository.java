@@ -8,5 +8,5 @@ import java.util.List;
 public interface SweetRepository extends JpaRepository<Sweet , Long> {
     List<Sweet> findByName(String name);
     List<Sweet> findByCategory(String category);
-
+    List<Sweet> findByPriceBetween(double minPrice, double maxPrice);
 }
