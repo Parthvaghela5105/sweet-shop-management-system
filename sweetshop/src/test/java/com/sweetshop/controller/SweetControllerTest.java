@@ -192,5 +192,35 @@ public class SweetControllerTest {
                 .andExpect(jsonPath("$[1].category").value("Milk-Based"));
     }
 
+    @Test
+    void testSearchSweetsByPriceRange() throws Exception {
+        SweetDTO sweet1 = SweetDTO.builder().name("Kaju Katli").category("Nut-Based").price(45.0).quantity(10).build();
+        SweetDTO sweet2 = SweetDTO.builder().name("Gulab Jamun").category("Milk-Based").price(30.0).quantity(15).build();
+        SweetDTO sweet3 = SweetDTO.builder().name("Ladoo").category("Gram-Based").price(60.0).quantity(5).build();
+
+        mockMvc.perform(post("/sweets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sweet1)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/sweets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sweet2)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/sweets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sweet3)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/sweets/search/range")
+                        .param("min", "25")
+                        .param("max", "50"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].name").exists())
+                .andExpect(jsonPath("$[1].name").exists());
+    }
+
 
 }
