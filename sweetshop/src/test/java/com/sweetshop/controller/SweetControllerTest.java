@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -40,4 +41,32 @@ public class SweetControllerTest {
                 .andExpect(jsonPath("$.price", is(50.0)))
                 .andExpect(jsonPath("$.quantity", is(20)));
     }
+
+    @Test
+    void testDeleteSweet_byId_returnsNoContent() throws Exception {
+        // First, add a sweet so that we can delete it
+        SweetDTO sweetDTO = SweetDTO.builder()
+                .name("Gulab Jamun")
+                .category("Milk-Based")
+                .price(15.0)
+                .quantity(10)
+                .build();
+
+        String response = mockMvc.perform(post("/sweets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sweetDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        // Extract the ID from the response
+        SweetDTO createdSweet = objectMapper.readValue(response, SweetDTO.class);
+        Long sweetId = createdSweet.getId();
+
+        // Now perform DELETE
+        mockMvc.perform(delete("/sweets/{id}", sweetId))
+                .andExpect(status().isNoContent());
+    }
+
 }
