@@ -37,4 +37,13 @@ public class SweetServiceImpl implements SweetService {
         }
         sweetRepository.deleteById(id);
     }
+
+    @Override
+    public List<SweetDTO> getSweetByName(String name) {
+        if(sweetRepository.findByName(name) != null){
+            List<Sweet> sweetList = sweetRepository.findByName(name);
+            return sweetList.stream().map(SweetMapper::toDTO).toList();
+        }
+        return null;
+    }
 }

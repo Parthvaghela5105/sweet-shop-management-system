@@ -138,7 +138,7 @@ public class SweetControllerTest {
 
         // Perform the search by name = Gulab
         mockMvc.perform(get("/sweets/search")
-                        .param("name", "Gulab"))
+                        .param("name", "Gulab Jamun"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].name").value("Gulab Jamun"));

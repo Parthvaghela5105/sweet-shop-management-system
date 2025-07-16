@@ -9,4 +9,5 @@ public interface SweetService {
     SweetDTO addSweet(SweetDTO sweetDTO);
     void deleteSweet(Long id);
     List<SweetDTO> getAllSweets();
+    List<SweetDTO> getSweetByName(String name);
 }
