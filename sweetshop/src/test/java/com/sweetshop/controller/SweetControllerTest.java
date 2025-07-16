@@ -108,5 +108,42 @@ public class SweetControllerTest {
                 .andExpect(jsonPath("$[1].name").value("Gulab Jamun"));
     }
 
+    @Test
+    void testSearchSweetsByName_returnsMatchingSweets() throws Exception {
+
+        // Add test sweets
+        SweetDTO sweet1 = SweetDTO.builder()
+                .name("Gulab Jamun")
+                .category("Milk-Based")
+                .price(30.0)
+                .quantity(10)
+                .build();
+
+        SweetDTO sweet2 = SweetDTO.builder()
+                .name("Kaju Katli")
+                .category("Nut-Based")
+                .price(50.0)
+                .quantity(20)
+                .build();
+
+        mockMvc.perform(post("/sweets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sweet1)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/sweets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sweet2)))
+                .andExpect(status().isCreated());
+
+        // Perform the search by name = Gulab
+        mockMvc.perform(get("/sweets/search")
+                        .param("name", "Gulab"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].name").value("Gulab Jamun"));
+    }
+
+
 
 }
