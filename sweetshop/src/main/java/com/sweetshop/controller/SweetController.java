@@ -5,10 +5,7 @@ import com.sweetshop.services.SweetService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/sweets")
@@ -24,6 +21,12 @@ public class SweetController {
     public ResponseEntity<SweetDTO> addSweet(@Valid @RequestBody SweetDTO sweetDTO){
         SweetDTO createdSweet = sweetService.addSweet(sweetDTO);
         return new ResponseEntity<>(createdSweet, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSweet(@PathVariable Long id){
+        sweetService.deleteSweet(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

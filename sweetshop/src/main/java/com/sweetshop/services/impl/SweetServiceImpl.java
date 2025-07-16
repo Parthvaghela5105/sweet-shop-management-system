@@ -21,4 +21,12 @@ public class SweetServiceImpl implements SweetService {
         sweetRepository.save(sweet);
         return SweetMapper.toDTO(sweet);
     }
+
+    @Override
+    public void deleteSweet(Long id) {
+        if(!sweetRepository.existsById(id)){
+            throw new RuntimeException("Sweet with id " + id + " does not exist");
+        }
+        sweetRepository.deleteById(id);
+    }
 }
