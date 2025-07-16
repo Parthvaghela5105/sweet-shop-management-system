@@ -1,5 +1,6 @@
 package com.sweetshop.controller;
 
+import com.sweetshop.dto.PurchaseRequestDTO;
 import com.sweetshop.dto.SweetDTO;
 import com.sweetshop.services.SweetService;
 import jakarta.validation.Valid;
@@ -50,6 +51,16 @@ public class SweetController {
     public ResponseEntity<List<SweetDTO>> getSweetByPriceRange(@RequestParam double minPrice , @RequestParam double maxPrice)
     {
         return new ResponseEntity<>(sweetService.getSweetByPriceRange(minPrice , maxPrice) , HttpStatus.OK);
+    }
+
+    @PostMapping("/purchase")
+    public ResponseEntity<String> purchaseSweet(@RequestBody PurchaseRequestDTO request) {
+        String response = sweetService.purchaseSweet(request.getSweetId(), request.getQuantity());
+        if (response.startsWith("Purchase successful")) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
 }

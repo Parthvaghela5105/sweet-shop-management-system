@@ -1,6 +1,7 @@
 package com.sweetshop.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sweetshop.dto.PurchaseRequestDTO;
 import com.sweetshop.dto.SweetDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

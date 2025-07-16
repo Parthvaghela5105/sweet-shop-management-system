@@ -66,4 +66,19 @@ public class SweetServiceImpl implements SweetService {
         }
         return null;
     }
+
+    @Override
+    public String purchaseSweet(Long sweetId, int quantity) {
+        Sweet sweet = sweetRepository.findById(sweetId)
+                .orElseThrow(() -> new RuntimeException("Sweet not found with ID: " + sweetId));
+
+        if (sweet.getQuantity() < quantity) {
+            return "Not enough stock available. Only " + sweet.getQuantity() + " units left.";
+        }
+
+        sweet.setQuantity(sweet.getQuantity() - quantity);
+        sweetRepository.save(sweet);
+
+        return "Purchase successful! " + quantity + " units of " + sweet.getName() + " purchased.";
+    }
 }
