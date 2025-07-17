@@ -136,7 +136,7 @@ public class SweetControllerTest {
                         .content(objectMapper.writeValueAsString(sweet2)))
                 .andExpect(status().isCreated());
 
-        // Perform the search by name = Gulab
+        // Perform the search by name = Gulab Jamun
         mockMvc.perform(get("/sweets/search")
                     .param("name", "Gulab Jamun"))
                 .andExpect(status().isOk())
